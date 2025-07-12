@@ -1,30 +1,90 @@
-import { useReducer } from "react"
+import { useEffect, useState } from "react";
+import Search from "./Search";
 
-export default function User(){
+export default function Weather(){
 
- const   initialState={count:0}
-function  reducer(state,action){
-    switch (action.type) {
-        case 'increment':
-            return({ count: state.count + 1 })
-            case 'decrement':
-                return({count: state.count -1})
-                case 'reverce':
-                    return({count: state.count = 0})
-          
-        default:
-            return state
+const [search,setSearch]=useState('')
+const [loading,setLoading]=useState(false)
+const [weatherData,setWeatherData]=useState(null)
+
+async function fetchWeatherData(param) {
+    setLoading(true)
+    try{
+        const response=await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${param}&appid=b3a25814c7ef707498f06f0ca44fa634`);
+
+        const data =await response.json()
+
+       
+        if(data){
+            setWeatherData(data)
+            setLoading(false)
+        }
+    }
+    catch(e){
+        setLoading(false)
+        console.log(e)
     }
 }
 
-    const[state,dispatch]=useReducer(reducer,initialState)
+async function handleSearch() {
+    fetchWeatherData(search)
+   
+}
 
-    return (
-        <div>
-            {state.count}
-<button onClick={()=>{dispatch({type: 'increment'})}}>+</button>
-<button onClick={()=>{dispatch({type: 'decrement'})}}>-</button>
-<button onClick={()=>{dispatch({type: 'reverce'})}}>_</button>
-        </div>
-    )
+function getCurrentDate(){
+    return new Date().toLocaleDateString('en-us',{
+        weekday:'long',
+        month:'long',
+        day:'numeric',
+        year:'numeric'
+    })
+}
+
+useEffect(()=>{
+fetchWeatherData('bangalore')
+},[])
+ console.log(loading)
+
+
+
+    return <div>
+        <Search
+        search={search}
+        setSearch={setSearch}
+        handleSearch={handleSearch}
+        />
+        {
+            loading ? <div className="loading">Loading..</div>:(
+                <div>
+            <div className="city-name">
+                <h2>{weatherData?.name}, <span>{weatherData?.sys?.country}</span></h2>
+            </div>
+          <div className="date">
+            <span>{getCurrentDate()}</span>
+          </div>
+          <div className="temp">
+            {weatherData?.main?.temp}
+          </div>
+          <p className="description">
+            {
+                weatherData && weatherData.weather && weatherData.weather[0] ? weatherData.weather[0].description : ''
+            }
+          </p>
+          <div className="weather-info">
+            <div className="column">
+                <div>
+                    <p className="wind">{weatherData?.wind?.speed}</p>
+                    <p>Wind Speed</p>
+                </div>
+            </div>
+            <div className="column">
+                <div>
+                    <p className="humidity">{weatherData?.main?.humidity}</p>
+                    <p>Humidity</p>
+                </div>
+            </div>
+          </div>
+          </div>
+        )}
+    </div>
 }
