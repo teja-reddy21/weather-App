@@ -2,6 +2,7 @@
 body{
 margin: 0;
 padding: 0;
+ background: rgb(0, 255, 166);
 }
 .App{
   text-align: center;
@@ -84,4 +85,54 @@ padding: 0;
   display: flex;
   align-items: center;
   line-height: 1px;
+}
+
+@media (max-width: 768px) {
+
+  .App {
+    width: 95%;
+    height: auto;
+    padding: 15px 10px;
+    
+  }
+
+  .search-engine {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-engine input {
+    width: 90%;
+    font-size: 15px;
+  margin-bottom: 15px;
+  }
+
+  .search-engine button {
+    width: 100%;
+    font-size: 18px;
+    padding: 10px;
+  }
+
+  .loading {
+    font-size: 40px;
+  }
+
+  .temp {
+    font-size: 48px;
+  }
+
+  .description {
+    font-size: 18px;
+  }
+
+  .weather-info {
+    flex-direction: column;
+    font-size: 18px;
+    padding: 0 10px;
+  }
+
+  .column {
+    margin-bottom: 10px;
+    justify-content: center;
+  }
 }
